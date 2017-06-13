@@ -39,7 +39,8 @@
         <span class="navbar-toggler-icon"></span>
     </button>
     <div class="container">
-        <a class="navbar-brand" href="#"> <img width="75" height="75" src="/logopucmm.png"> Blog PUCMM Programacion Web 2017</a>
+        <a class="navbar-brand" href="/home"> <img width="75" height="75" src="/logopucmm.png"> Blog PUCMM Programacion
+            Web 2017</a>
     </div>
 </nav>
 
@@ -90,7 +91,7 @@
 <!-- Footer -->
 <footer class="py-5 bg-inverse">
     <div class="container">
-        <p class="m-0 text-center text-white">Copyright &copy; Your Website 2017</p>
+        <p class="m-0 text-center text-white">Pucmm &copy; Programacion Web 2017</p>
     </div>
     <!-- /.container -->
 </footer>

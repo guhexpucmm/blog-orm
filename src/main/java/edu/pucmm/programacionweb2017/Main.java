@@ -2,6 +2,7 @@ package edu.pucmm.programacionweb2017;
 
 import edu.pucmm.programacionweb2017.entidad.Articulo;
 import edu.pucmm.programacionweb2017.entidad.Comentario;
+import edu.pucmm.programacionweb2017.entidad.Etiqueta;
 import edu.pucmm.programacionweb2017.entidad.Usuario;
 import edu.pucmm.programacionweb2017.hibernate.HibernateUtil;
 import edu.pucmm.programacionweb2017.service.ServiceArticulo;
@@ -20,23 +21,25 @@ import java.util.*;
 
 import static edu.pucmm.programacionweb2017.database.BootstrapServices.startDb;
 import static spark.Spark.*;
+import static spark.debug.DebugScreen.enableDebugScreen;
 
 /**
  * Created by mt on 04/06/17.
  */
 public class Main {
     private static final Logger logger = LoggerFactory.getLogger(Main.class);
-
-    static boolean estaLogueado=estaLogueado(false);
-    static Usuario usuarioLogueado = new Usuario();
-
     private static final ServiceArticulo serviceArticulo = new ServiceArticulo();
     private static final ServiceComentario serviceComentario = new ServiceComentario();
     private static final ServiceEtiqueta serviceEtiqueta = new ServiceEtiqueta();
     private static final ServiceUsuario serviceUsuario = new ServiceUsuario();
+    static boolean estaLogueado = estaLogueado(false);
+    static Usuario usuarioLogueado = new Usuario();
 
     public static void main(String[] args) throws SQLException {
         logger.info("Iniciando aplicacion");
+
+        logger.info("Iniciando pantalla de debugueo");
+        enableDebugScreen();//REMOVER PARA PRODUCCION
 
         logger.info("Creando el folder estatico");
         staticFileLocation("/public/");
@@ -143,6 +146,18 @@ public class Main {
             return new ModelAndView(null, "/index.ftl");
         }, freeMarkerEngine );
 
+        //!////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        //FILTRO PARA DETENER USUARIOS QUE NO TIENEN PERMISOS PARA CREAR USUARIO
+        before("/crearArticulo/:idUsuario", (request, response) -> {
+            Usuario usuarioLogueado = serviceUsuario.encontrarPorId(Long.parseLong(request.params("idUsuario")));
+
+            if (!(usuarioLogueado.isAdministrador() || usuarioLogueado.isAutor())) {
+                halt(401, "No tiene permisos para crear articulo!");
+            }
+
+
+        });
+
 //!/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         get("/crearArticulo/:idUsuario", (request,response)-> {
             usuarioLogueado = serviceUsuario.encontrarPorId(Long.parseLong(request.params("idUsuario")));
@@ -152,37 +167,22 @@ public class Main {
             return new ModelAndView(attributes, "/crearArticulo.ftl");
         }, freeMarkerEngine );
 
-//!////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        //FILTRO PARA DETENER USUARIOS QUE NO TIENEN PERMISOS PARA CREAR USUARIO
-        before("/crearArticulo/:idUsuario", (request, response) ->{
-            Usuario usuarioLogueado = serviceUsuario.encontrarPorId(Long.parseLong(request.params("idUsuario")));
-
-            if(!(usuarioLogueado.isAdministrador() || usuarioLogueado.isAutor())){
-                halt(401,"No tiene permisos para crear articulo!");
-            }
-
-
-        } );
-
 //!/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         post("/crearArticulo/:idUsuario", (request,response)-> {
 
             Map<String, Object> attributes = new HashMap<>();
+            List<Etiqueta> etiquetas = new ArrayList<>();
+
+            for (String string : Arrays.asList(request.queryMap().get("Eti").value().split(","))) {
+                etiquetas.add(new Etiqueta(string));
+            }
+
             Articulo nuevoArticulo = new Articulo();
             nuevoArticulo.setTitulo(request.queryParams("Titu"));
             nuevoArticulo.setCuerpo(request.queryParams("Cuer"));
             nuevoArticulo.setFecha(LocalDate.now());
-
-
-            int usuarioId=Integer.parseInt(request.params("idUsuario"));
-            Usuario usuarioLogueado = new Usuario();
-            for(int i=0;i<serviceUsuario.encontrarTodos().size();i++){
-                if(usuarioId == serviceUsuario.encontrarTodos().get(i).getId()){
-                    usuarioLogueado=serviceUsuario.encontrarTodos().get(i);
-
-                }
-            }
-            nuevoArticulo.setAutor(usuarioLogueado);
+            nuevoArticulo.setAutor(serviceUsuario.encontrarPorId(Long.parseLong(request.params().get(":idusuario"))));
+            nuevoArticulo.getListaEtiquetas().addAll(etiquetas);
 
             attributes.put("usuario",usuarioLogueado);
             serviceArticulo.insertar(nuevoArticulo);
@@ -200,9 +200,19 @@ public class Main {
 
             Map<String, Object> attributes = new HashMap<>();
 
+            StringBuilder etiquetas = new StringBuilder();
+
+            for (Etiqueta etiqueta : articuloSeleccionado.getListaEtiquetas()) {
+                etiquetas.append(etiqueta.getEtiqueta() + ",");
+            }
+
+            if (etiquetas.charAt(etiquetas.length() - 1) == ',')
+                etiquetas.deleteCharAt(etiquetas.length() - 1);
+
             attributes.put("estaLogueado", estaLogueado);
             attributes.put("usuarioLogueado", usuarioLogueado);
             attributes.put("articuloSeleccionado", articuloSeleccionado);
+            attributes.put("etiquetas", etiquetas.toString());
             attributes.put("comentarios", articuloSeleccionado.getListaComentarios());
 
             return new ModelAndView(attributes, "/administrarArticulo.ftl");
@@ -250,20 +260,40 @@ public class Main {
 
         get("/modificarArticulo/:idArticulo", (request, response) -> {
             Long idArticulo = Long.parseLong(request.params("idArticulo"));
-            Map<String, Object> attributes = new HashMap<>();
+            Articulo articulo = serviceArticulo.encontrarPorId(idArticulo);
 
-            attributes.put("articulo",serviceArticulo.encontrarPorId(idArticulo));
+            Map<String, Object> attributes = new HashMap<>();
+            StringBuilder etiquetas = new StringBuilder();
+
+            for (Etiqueta etiqueta : articulo.getListaEtiquetas()) {
+                etiquetas.append(etiqueta.getEtiqueta() + ",");
+            }
+
+            if (etiquetas.charAt(etiquetas.length() - 1) == ',')
+                etiquetas.deleteCharAt(etiquetas.length() - 1);
+
+            attributes.put("articulo", articulo);
+            attributes.put("etiquetas", etiquetas);
 
             return new ModelAndView(attributes, "/modificarArticulo.ftl");
         }, freeMarkerEngine);
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         post("/modificarArticulo/:idArticulo", (request, response) -> {
+            Articulo articulo = serviceArticulo.encontrarPorId(Long.parseLong(request.params("idArticulo")));
+
             Map<String, Object> attributes = new HashMap<>();
 
-            Articulo articulo = serviceArticulo.encontrarPorId(Long.parseLong(request.params("idArticulo")));
+            List<Etiqueta> etiquetas = new ArrayList<>();
+
+            for (String string : Arrays.asList(request.queryMap().get("Eti").value().split(","))) {
+                etiquetas.add(new Etiqueta(string));
+            }
+
             articulo.setTitulo(request.queryMap().get("Titu").value());
             articulo.setCuerpo(request.queryMap().get("Cuer").value());
+            articulo.getListaEtiquetas().clear();
+            articulo.getListaEtiquetas().addAll(etiquetas);
 
             serviceArticulo.actualizar(articulo);
 

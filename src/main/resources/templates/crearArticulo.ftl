@@ -56,7 +56,7 @@
 
             <div class="card mb-4">
                 <div class="card-block">
-                    <h2 class="card-title">Nuevo Articulo</h2>
+                    <h2 class="card-title">Nuevo articulo</h2>
                     <p class="card-text">
                         <form action="/crearArticulo/${usuario.getId()}" method="post">
                             <div class="form-group">
@@ -96,7 +96,7 @@
 <!-- Footer -->
 <footer class="py-5 bg-inverse">
     <div class="container">
-        <p class="m-0 text-center text-white">Copyright &copy; Your Website 2017</p>
+        <p class="m-0 text-center text-white">Pucmm &copy; Programacion Web 2017</p>
     </div>
     <!-- /.container -->
 </footer>

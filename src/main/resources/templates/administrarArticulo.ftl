@@ -39,7 +39,8 @@
         <span class="navbar-toggler-icon"></span>
     </button>
     <div class="container">
-        <a class="navbar-brand" href="#"> <img width="75" height="75" src="/logopucmm.png"> Blog PUCMM Programacion Web 2017</a>
+        <a class="navbar-brand" href="/home"> <img width="75" height="75" src="/logopucmm.png"> Blog PUCMM Programacion
+            Web 2017</a>
     </div>
 </nav>
 
@@ -55,6 +56,11 @@
                     <h2 class="card-title">${articuloSeleccionado.getTitulo()}</h2>
                     <p class="card-text">${articuloSeleccionado.getCuerpo()}</p>
                 </div>
+
+                <div class="card-footer text-muted">
+                    <label>Etiquetas: ${etiquetas}</label>
+                </div>
+
                 <div class="card-footer text-muted">
 
                     <button type="button" class="btn btn-default">
@@ -64,7 +70,8 @@
                         <a href="/modificarArticulo/${articuloSeleccionado.getId()}">Modificar</a>
                     </button>
 
-                    ${articuloSeleccionado.getFecha()} by <a href="#">${articuloSeleccionado.buscarNombreAutor(articuloSeleccionado.getAutor())}</a>
+                ${articuloSeleccionado.getFecha()}
+                    by <a href="#">${articuloSeleccionado.getAutor().getNombre()}</a>
 
                 </div>
             </div>
@@ -121,7 +128,69 @@
 
         </div>
 
+<!-- Sidebar Widgets Column -->
+<div class="col-md-3">
+
+<#if estaLogueado==false>
+    <h1 class="my-4">&nbsp
+        <small></small>
+    </h1> <!-- ESPACIO VACIO -->
+    <div class="card my-4">
+        <h5 class="card-header">Iniciar sesion</h5>
+        <div class="card-block">
+            <form action="/home" method="post" class="form-bottom">
+                <div class="form-group">
+                    <input class="form-username form-control" type="text" name="User" value="" id="Username"
+                           placeholder="Username">
+                </div>
+                <div class="form-group">
+                    <input class="form-username form-control" type="password" name="Pass" value="" id="Password"
+                           placeholder="Password">
+                </div>
+                <div class="input-group">
+                    <button class="btn btn-primary" type="submit">Ingresar</button>
+
+                </div>
+            </form>
+        </div>
     </div>
+</#if>
+
+<#if estaLogueado==true>
+    <h1 class="my-4">&nbsp
+        <small></small>
+    </h1> <!-- ESPACIO VACIO -->
+    <div class="card my-4">
+        <h5 class="card-header">Bienvenido: </h5>
+        <div class="card-block">
+            <div class="input-group">
+                <label>${usuarioLogueado.getNombre()}</label>
+            </div>
+            <div class="input-group">
+                <form method="get" action="/home/cerrarSesion">
+                    <button class="btn btn-danger" type="submit">Cerrar sesion</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="card my-4">
+        <div class="card-header">
+            <button type="button" class="btn btn-primary"
+                    onclick="window.location='/crearArticulo/${usuarioLogueado.getId()}'">Nuevo articulo
+            </button>
+        </div>
+        <div class="card-header">
+            <#if usuarioLogueado.getUsername() == "admin">
+                <button type="button" class="btn btn-primary" onclick="window.location='/crearUsuario/'">Nuevo usuario
+                </button>
+            </#if>
+        </div>
+    </div>
+</#if>
+</div>
+</div>
+
+</div>
     <!-- /.row -->
 
 </div>
@@ -130,7 +199,7 @@
 <!-- Footer -->
 <footer class="py-5 bg-inverse">
     <div class="container">
-        <p class="m-0 text-center text-white">Copyright &copy; Your Website 2017</p>
+        <p class="m-0 text-center text-white">Pucmm &copy; Programacion Web 2017</p>
     </div>
     <!-- /.container -->
 </footer>

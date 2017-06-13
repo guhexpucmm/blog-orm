@@ -39,7 +39,8 @@
         <span class="navbar-toggler-icon"></span>
     </button>
     <div class="container">
-        <a class="navbar-brand" href="#"> <img width="75" height="75" src="/logopucmm.png"> Blog PUCMM Programacion Web 2017</a>
+        <a class="navbar-brand" href="/home"> <img width="75" height="75" src="/logopucmm.png"> Blog PUCMM Programacion
+            Web 2017</a>
     </div>
 </nav>
 
@@ -60,7 +61,7 @@
                     <a href="/administrarArticulo/${articulo.getId()}" class="btn btn-primary">Leer mas &rarr;</a>
                 </div>
                 <div class="card-footer text-muted">
-                    ${articulo.getFecha()} <a href="#">${articulo.buscarNombreAutor(articulo.getAutor())}</a>
+                ${articulo.getFecha()} <a href="#">${articulo.getAutor().getNombre()}</a>
                 </div>
             </div>
         </#list>
@@ -109,21 +110,21 @@
                    </div>
                    <div class="input-group">
                        <form method="get" action="/home/cerrarSesion">
-                           <button class="btn btn-primary" type="submit">CERRAR SESION</button>
+                           <button class="btn btn-danger" type="submit">Cerrar sesion</button>
                        </form>
                    </div>
                </div>
            </div>
            <div class="card my-4">
                <div class="card-header">
-                   <button type="button" class="btn btn-default">
-                       <a href="/crearArticulo/${usuarioLogueado.getId()}">Crear Nuevo Articulo</a>
+                   <button type="button" class="btn btn-primary"
+                           onclick="window.location='/crearArticulo/${usuarioLogueado.getId()}'">Nuevo articulo
                    </button>
                </div>
                <div class="card-header">
                    <#if usuarioLogueado.getUsername() == "admin">
-                       <button type="button" class="btn btn-default">
-                           <a href="/crearUsuario/">Crear Nuevo Usuario</a>
+                       <button type="button" class="btn btn-primary" onclick="window.location='/crearUsuario/'">Nuevo
+                           usuario
                        </button>
                    </#if>
                </div>
@@ -138,7 +139,7 @@
 <!-- Footer -->
 <footer class="py-5 bg-inverse">
     <div class="container">
-        <p class="m-0 text-center text-white">Copyright &copy; Your Website 2017</p>
+        <p class="m-0 text-center text-white">Pucmm &copy; Programacion Web 2017</p>
     </div>
     <!-- /.container -->
 </footer>

@@ -2,6 +2,7 @@ package edu.pucmm.programacionweb2017.entidad;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Set;
 
 
@@ -26,16 +27,18 @@ public class Articulo {
     private Usuario autor;
     @Column(name = "FECHA", nullable = false)
     private LocalDate fecha;
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "ARTICULO_COMENTARIOS", joinColumns = { @JoinColumn(name = "ARTICULO_ID") }, inverseJoinColumns = { @JoinColumn(name = "COMENTARIO_ID") })
     private Set<Comentario> listaComentarios;
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "ARTICULO_ETIQUETAS", joinColumns = { @JoinColumn(name = "ARTICULO_ID") }, inverseJoinColumns = { @JoinColumn(name = "ETIQUETA_ID") })
     private Set<Etiqueta> listaEtiquetas;
     @Transient
     private String resumen;
 
     public Articulo() {
+        listaComentarios = new HashSet<>();
+        listaEtiquetas = new HashSet<>();
     }
 
     public Articulo(String titulo, String cuerpo, Usuario autor, LocalDate fecha, Set<Comentario> listaComentarios, Set<Etiqueta> listaEtiquetas, String resumen) {

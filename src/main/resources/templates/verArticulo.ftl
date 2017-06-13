@@ -112,7 +112,7 @@
 <!-- Footer -->
 <footer class="py-5 bg-inverse">
     <div class="container">
-        <p class="m-0 text-center text-white">Copyright &copy; Your Website 2017</p>
+        <p class="m-0 text-center text-white">Pucmm &copy; Programacion Web 2017</p>
     </div>
     <!-- /.container -->
 </footer>

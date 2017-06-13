@@ -56,23 +56,32 @@
 
             <div class="card mb-4">
                 <div class="card-block">
-                    <h2 class="card-title">Nuevo Articulo</h2>
+                    <h2 class="card-title">Modificar articulo</h2>
                     <p class="card-text">
                     <form action="/modificarArticulo/${articulo.getId()}" method="post">
                         <div class="form-group">
                             <label for="Titulo">Titulo&nbsp&nbsp&nbsp</label>
-                            <input style="width:500px" type="text" name="Titu" id="Titulo" value="${articulo.getTitulo()}"><br>
+                            <input style="width:500px" type="text" name="Titu" id="Titulo"
+                                   value="${articulo.getTitulo()}" placeholder="Titulo del articulo"><br>
                         </div>
 
                         <div class="form-group">
                             <label for="Cuerpo">Cuerpo</label>
                             <input class="form-username form-control" style="width:500px;height:250px" type="text"
-                                   name="Cuer" id="Cuerpo" value="${articulo.getCuerpo()}"><br>
+                                   name="Cuer" id="Cuerpo" value="${articulo.getCuerpo()}"
+                                   placeholder="Cuerpo del articulo"><br>
                         </div>
 
-                        <!-- todo Aqui falta las etiquetas -->
+                        <div class="form-group">
+                            <label for="Etiqueta">Etiquetas: </label>
+                            <input class="form-username form-control" style="..." type="text" name="Eti"
+                                   id="Etiqueta" value="${etiquetas}"
+                                   placeholder="Etiquetas. Si es mas de una, separarlas por comas.">
+                        </div>
 
-                        <button class="btn btn-success" type="submit" >Guardar</button>
+                        <button class="btn btn-success" type="submit">Modificar</button>
+                        <button class="btn btn-danger" type="button" onclick="location.href = '/home';">Cancelar
+                        </button>
                     </form>
                     </p>
 
@@ -90,7 +99,7 @@
 <!-- Footer -->
 <footer class="py-5 bg-inverse">
     <div class="container">
-        <p class="m-0 text-center text-white">Copyright &copy; Your Website 2017</p>
+        <p class="m-0 text-center text-white">Pucmm &copy; Programacion Web 2017</p>
     </div>
     <!-- /.container -->
 </footer>
