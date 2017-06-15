@@ -61,7 +61,7 @@
                     <label>Etiquetas: ${etiquetas}</label>
                 </div>
 
-                <div class="card-footer text-muted">
+                <div class="card-footer">
 
                     <button type="button" class="btn btn-default">
                         <a href="/eliminarArticulo/${articuloSeleccionado.getId()}">Eliminar</a>
@@ -70,12 +70,26 @@
                         <a href="/modificarArticulo/${articuloSeleccionado.getId()}">Modificar</a>
                     </button>
 
-                ${articuloSeleccionado.getFecha()}
-                    by <a href="#">${articuloSeleccionado.getAutor().getNombre()}</a>
+                    <label>
+                    ${articuloSeleccionado.getFecha()}
+                        by <a href="#">${articuloSeleccionado.getAutor().getNombre()}</a>
+                    </label>
+
+                    <div class="btn-group" role="group" aria-label="...">
+                        <button type="button" class="btn btn-success" onclick="meGusta()">
+                            <span class="glyphicon glyphicon-thumbs-up"></span>Me gusta!<span
+                                class="badge">${valoracionesPositivas}</span>
+                        </button>
+                        <button type="button" class="btn btn-danger">
+                            <span class="glyphicon glyphicon-thumbs-down"></span>No me gusta!<span
+                                class="badge">0</span>
+                        </button>
+                    </div>
 
                 </div>
             </div>
-            <div class="card mb-4">
+
+        <div class="card mb-4">
                 <div class="card-block">
                     <h2 class="card-title">Comentarios</h2>
                     <p class="card-text">
@@ -210,5 +224,9 @@
 <script src="/vendor/bootstrap/js/bootstrap.min.js"></script>
 
 </body>
-
+<script>
+    function meGusta() {
+        var articulo
+    }
+</script>
 </html>

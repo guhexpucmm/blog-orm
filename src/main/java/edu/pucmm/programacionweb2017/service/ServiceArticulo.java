@@ -2,6 +2,7 @@ package edu.pucmm.programacionweb2017.service;
 
 import edu.pucmm.programacionweb2017.dao.impl.DAOArticuloImpl;
 import edu.pucmm.programacionweb2017.entidad.Articulo;
+import edu.pucmm.programacionweb2017.entidad.Valoracion;
 
 import java.util.List;
 
@@ -33,5 +34,13 @@ public class ServiceArticulo{
 
     public List<Articulo> encontrarTodos() {
         return daoArticulo.encontrarTodos();
+    }
+
+    public List<Valoracion> obtenerValoracionesPositivas(Articulo articulo) {
+        return daoArticulo.obtenerValoracionesPositivas(articulo);
+    }
+
+    public List<Valoracion> obtenerValoracionesNegativas(Articulo articulo) {
+        return daoArticulo.obtenerValoracionesNegativas(articulo);
     }
 }

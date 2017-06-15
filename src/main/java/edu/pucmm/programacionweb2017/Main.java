@@ -15,7 +15,6 @@ import org.slf4j.LoggerFactory;
 import spark.ModelAndView;
 import spark.template.freemarker.FreeMarkerEngine;
 
-import javax.persistence.criteria.CriteriaBuilder;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.*;
@@ -238,6 +237,8 @@ public class Main {
             attributes.put("estaLogueado", estaLogueado);
             attributes.put("usuarioLogueado", usuarioLogueado);
             attributes.put("articuloSeleccionado", articuloSeleccionado);
+            attributes.put("valoracionesPositivas", serviceArticulo.obtenerValoracionesPositivas(articuloSeleccionado).size());
+            attributes.put("valoracionesNegativas", serviceArticulo.obtenerValoracionesNegativas(articuloSeleccionado).size());
             attributes.put("etiquetas", etiquetas.toString());
             attributes.put("comentarios", articuloSeleccionado.getListaComentarios());
 

@@ -33,22 +33,26 @@ public class Articulo {
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "articuloEtiquetas", joinColumns = {@JoinColumn(name = "articuloId")}, inverseJoinColumns = {@JoinColumn(name = "etiquetaId")})
     private Set<Etiqueta> listaEtiquetas;
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(name = "articuloValoraciones", joinColumns = {@JoinColumn(name = "articuloId")}, inverseJoinColumns = {@JoinColumn(name = "valoracionId")})
+    private Set<Valoracion> listaValoraciones;
     @Transient
     private String resumen;
 
     public Articulo() {
         listaComentarios = new HashSet<>();
         listaEtiquetas = new HashSet<>();
+        listaValoraciones = new HashSet<>();
     }
 
-    public Articulo(String titulo, String cuerpo, Usuario autor, LocalDate fecha, Set<Comentario> listaComentarios, Set<Etiqueta> listaEtiquetas, String resumen) {
+    public Articulo(String titulo, String cuerpo, Usuario autor, LocalDate fecha, Set<Comentario> listaComentarios, Set<Etiqueta> listaEtiquetas, Set<Valoracion> listaValoraciones) {
         this.titulo = titulo;
         this.cuerpo = cuerpo;
         this.autor = autor;
         this.fecha = fecha;
         this.listaComentarios = listaComentarios;
         this.listaEtiquetas = listaEtiquetas;
-        this.resumen = resumen;
+        this.listaValoraciones = listaValoraciones;
     }
 
     public Long getId() {
@@ -105,6 +109,14 @@ public class Articulo {
 
     public void setListaEtiquetas(Set<Etiqueta> listaEtiquetas) {
         this.listaEtiquetas = listaEtiquetas;
+    }
+
+    public Set<Valoracion> getListaValoraciones() {
+        return listaValoraciones;
+    }
+
+    public void setListaValoraciones(Set<Valoracion> listaValoraciones) {
+        this.listaValoraciones = listaValoraciones;
     }
 
     public String getResumen() {
