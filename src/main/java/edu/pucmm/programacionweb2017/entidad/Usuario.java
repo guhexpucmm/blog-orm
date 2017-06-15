@@ -6,22 +6,22 @@ import javax.persistence.*;
  * Created by mt on 06/06/17.
  */
 @Entity
-@Table(name = "USUARIO")
+@Table(name = "usuario")
 @Access(AccessType.FIELD)
 public class Usuario {
     @Id
     @GeneratedValue
-    @Column(name = "ID", nullable = false, unique = true, updatable = false)
+    @Column(name = "id", nullable = false, unique = true, updatable = false)
     private Long id;
-    @Column(name = "USERNAME")
+    @Column(name = "username")
     private String username;
-    @Column(name = "NOMBRE")
+    @Column(name = "nombre")
     private String nombre;
-    @Column(name = "PASSWORD")
+    @Column(name = "password")
     private String password;
-    @Column(name = "ADMINISTRADOR")
+    @Column(name = "administrator")
     private boolean administrador;
-    @Column(name = "AUTOR")
+    @Column(name = "autor")
     private boolean autor;
 
     public Usuario() {

@@ -28,10 +28,12 @@ import static spark.debug.DebugScreen.enableDebugScreen;
  */
 public class Main {
     private static final Logger logger = LoggerFactory.getLogger(Main.class);
+
     private static final ServiceArticulo serviceArticulo = new ServiceArticulo();
     private static final ServiceComentario serviceComentario = new ServiceComentario();
     private static final ServiceEtiqueta serviceEtiqueta = new ServiceEtiqueta();
     private static final ServiceUsuario serviceUsuario = new ServiceUsuario();
+
     static boolean estaLogueado = estaLogueado(false);
     static Usuario usuarioLogueado = new Usuario();
 

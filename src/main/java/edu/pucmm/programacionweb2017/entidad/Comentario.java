@@ -8,24 +8,24 @@ import java.util.Set;
  * Created by mt on 06/06/17.
  */
 @Entity
-@Table(name = "COMENTARIO")
+@Table(name = "comentario")
 @Access(AccessType.FIELD)
 public class Comentario {
 
     @Id
     @GeneratedValue
-    @Column(name = "ID")
+    @Column(name = "id")
     private Long id;
-    @Column(name = "COMENTARIO")
+    @Column(name = "comentario")
     private String comentario;
     @OneToOne(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
-    @JoinColumn(name = "USUARIO_ID", nullable = false)
+    @JoinColumn(name = "usuarioId", nullable = false)
     private Usuario autor;
     @OneToOne(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
-    @JoinColumn(name = "ARTICULO_ID", nullable = false)
+    @JoinColumn(name = "articuloId", nullable = false)
     private Articulo articulo;
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(name = "COMENTARIO_USUARIOS", joinColumns = {@JoinColumn(name = "COMENTARIO_ID")}, inverseJoinColumns = {@JoinColumn(name = "USUARIO_ID")})
+    @JoinTable(name = "comentarioUsuarios", joinColumns = {@JoinColumn(name = "comentarioId")}, inverseJoinColumns = {@JoinColumn(name = "usuarioId")})
     private Set<Usuario> listaUsuarios;
 
     public Comentario() {

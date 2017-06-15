@@ -6,14 +6,14 @@ import javax.persistence.*;
  * Created by mt on 06/06/17.
  */
 @Entity
-@Table(name = "ETIQUETA")
+@Table(name = "etiqueta")
 @Access(AccessType.FIELD)
 public class Etiqueta {
     @Id
     @GeneratedValue
-    @Column(name = "ID")
+    @Column(name = "id")
     private Long id;
-    @Column(name = "ETIQUETA")
+    @Column(name = "etiqueta")
     private String etiqueta;
 
     public Etiqueta() {

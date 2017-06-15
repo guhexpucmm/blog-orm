@@ -10,28 +10,28 @@ import java.util.Set;
  * Created by mt on 06/06/17.
  */
 @Entity
-@Table(name = "ARTICULO")
+@Table(name = "articulo")
 @Access(AccessType.FIELD)
 public class Articulo {
 
     @Id
     @GeneratedValue()
-    @Column(name = "ID", nullable = false, unique = true, updatable = false)
+    @Column(name = "id", nullable = false, unique = true, updatable = false)
     private Long id;
-    @Column(name = "TITULO", nullable = false)
+    @Column(name = "titulo", nullable = false)
     private String titulo;
-    @Column(name = "CUERPO", nullable = false)
+    @Column(name = "cuerpo", nullable = false)
     private String cuerpo;
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
-    @JoinColumn(name = "AUTOR_ID")
+    @JoinColumn(name = "autorId")
     private Usuario autor;
-    @Column(name = "FECHA", nullable = false)
+    @Column(name = "fecha", nullable = false)
     private LocalDate fecha;
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(name = "ARTICULO_COMENTARIOS", joinColumns = { @JoinColumn(name = "ARTICULO_ID") }, inverseJoinColumns = { @JoinColumn(name = "COMENTARIO_ID") })
+    @JoinTable(name = "articuloComentarios", joinColumns = {@JoinColumn(name = "articuloId")}, inverseJoinColumns = {@JoinColumn(name = "comentarioId")})
     private Set<Comentario> listaComentarios;
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(name = "ARTICULO_ETIQUETAS", joinColumns = { @JoinColumn(name = "ARTICULO_ID") }, inverseJoinColumns = { @JoinColumn(name = "ETIQUETA_ID") })
+    @JoinTable(name = "articuloEtiquetas", joinColumns = {@JoinColumn(name = "articuloId")}, inverseJoinColumns = {@JoinColumn(name = "etiquetaId")})
     private Set<Etiqueta> listaEtiquetas;
     @Transient
     private String resumen;
