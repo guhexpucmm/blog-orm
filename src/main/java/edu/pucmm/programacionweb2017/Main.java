@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import spark.ModelAndView;
 import spark.template.freemarker.FreeMarkerEngine;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.*;
@@ -34,6 +35,8 @@ public class Main {
     private static final ServiceEtiqueta serviceEtiqueta = new ServiceEtiqueta();
     private static final ServiceUsuario serviceUsuario = new ServiceUsuario();
 
+    static int ultimoIdArticulo = 0;
+    static int numeroPagina = 1;
     static boolean estaLogueado = estaLogueado(false);
     static Usuario usuarioLogueado = new Usuario();
 
@@ -58,10 +61,13 @@ public class Main {
         configuration.setClassForTemplateLoading(Main.class, "/templates/");
         FreeMarkerEngine freeMarkerEngine= new FreeMarkerEngine(configuration);
 
-        get("", (request, response) -> {
-            response.redirect("/home");
-            return null;
-        });
+
+        get("/", (request,response)-> {
+
+            Map<String, Object> attributes = new HashMap<>();
+            response.redirect("/home/");
+            return new ModelAndView(null, "/index.ftl");
+        }, freeMarkerEngine );
 
         get("/crearUsuario/", (request,response)-> {
 
@@ -87,7 +93,7 @@ public class Main {
             attributes.put("usuarioLogueado", usuarioLogueado);
             attributes.put("estaLogueado", estaLogueado);
 
-            response.redirect("/home");
+            response.redirect("/home/");
 
 
 
@@ -97,8 +103,25 @@ public class Main {
 //!/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         get("/home", (request,response)-> {
 
+
+            response.redirect("/home/1");
+
+            return new ModelAndView(null, "/index.ftl");
+        }, freeMarkerEngine );
+
+        get("/home/:numeroPagina", (request,response)-> {
+            List<Articulo> articulosPorPagina = serviceArticulo.encontrarTodos();
+            numeroPagina=Integer.parseInt(request.params("numeroPagina"));
+            int listaFin = numeroPagina *5;
+            int listaInicio = listaFin - 5;
+
             Map<String, Object> attributes = new HashMap<>();
-            attributes.put("articulos",serviceArticulo.encontrarTodos());
+            attributes.put("numeroPagina",numeroPagina);
+            if(serviceArticulo.encontrarTodos().size() < listaFin){
+                attributes.put("articulos",articulosPorPagina.subList(listaInicio,serviceArticulo.encontrarTodos().size()));
+            } else {
+                attributes.put("articulos",articulosPorPagina.subList(listaInicio,listaFin));
+            }
             attributes.put("usuarioLogueado", usuarioLogueado);
             attributes.put("estaLogueado", estaLogueado);
 
@@ -106,7 +129,7 @@ public class Main {
         }, freeMarkerEngine );
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        post("/home", (request, response) -> {
+        post("/home/", (request, response) -> {
 
             Map<String, Object> attributes = new HashMap<>();
             boolean existe = false;
@@ -126,6 +149,7 @@ public class Main {
 
                 }
             }
+            attributes.put("numeroPagina",numeroPagina);
             attributes.put("articulos",serviceArticulo.encontrarTodos());
             attributes.put("usuarioLogueado", usuarioLogueado);
             attributes.put("estaLogueado", estaLogueado);
@@ -143,7 +167,7 @@ public class Main {
             usuarioLogueado=new Usuario();
 
 
-            response.redirect("/home");
+            response.redirect("/home/1");
 
             return new ModelAndView(null, "/index.ftl");
         }, freeMarkerEngine );
@@ -189,7 +213,7 @@ public class Main {
             attributes.put("usuario",usuarioLogueado);
             serviceArticulo.insertar(nuevoArticulo);
 
-            response.redirect("/home");
+            response.redirect("/home/1");
 
             return new ModelAndView(attributes, "/crearArticulo.ftl");
         }, freeMarkerEngine );
@@ -231,7 +255,7 @@ public class Main {
             nuevoComentario.setAutor(usuarioLogueado);
             serviceComentario.insertar(nuevoComentario);
 
-            response.redirect("/home"); //ARREGLAR QUE AL CREAR MANDA A INDEX **********************************************
+            response.redirect("/home/1"); //ARREGLAR QUE AL CREAR MANDA A INDEX **********************************************
 
             return new ModelAndView(attributes, "/crearComentario.ftl");
         }, freeMarkerEngine);
@@ -244,7 +268,7 @@ public class Main {
 
             serviceArticulo.borrar(serviceArticulo.encontrarPorId(ArticuloId));
             //Comentario.eliminarComentario(ComentarioId);
-            response.redirect("/home"); //ARREGLAR QUE AL ELIMINAR MANDA A INDEX **********************************************
+            response.redirect("/home/1");//ARREGLAR QUE AL ELIMINAR MANDA A INDEX **********************************************
 
             return new ModelAndView(attributes, "/eliminarArticulo.ftl");
         }, freeMarkerEngine);
@@ -300,7 +324,7 @@ public class Main {
             serviceArticulo.actualizar(articulo);
 
             attributes.put("articulo", articulo);
-            response.redirect("/home");
+            response.redirect("/home/1");
 
             return new ModelAndView(attributes, "/modificarArticulo.ftl");
         }, freeMarkerEngine);

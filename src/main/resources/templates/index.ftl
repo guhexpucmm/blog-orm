@@ -11,10 +11,10 @@
     <title>Blog Home</title>
 
     <!-- Bootstrap core CSS -->
-    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Custom styles for this template -->
-    <link href="css/blog-home.css" rel="stylesheet">
+    <link href="/css/blog-home.css" rel="stylesheet">
 
     <!-- Temporary navbar container fix -->
     <style>
@@ -69,7 +69,7 @@
             <!-- Pagination -->
             <ul class="pagination justify-content-center mb-4">
                 <li class="page-item"><a class="page-link" href="#">&larr; Older</a></li>
-                <li class="page-item disabled"><a class="page-link" href="#">Newer &rarr;</a></li>
+                <li class="page-item"><a class="page-link" href="/home/${numeroPagina +1}">Newer &rarr;</a></li>
             </ul>
 
         </div>
@@ -82,7 +82,7 @@
            <div class="card my-4">
                <h5 class="card-header">Iniciar sesion</h5>
                <div class="card-block">
-                   <form action="/home" method="post" class="form-bottom">
+                   <form action="/home/" method="post" class="form-bottom">
                        <div class="form-group">
                            <input class="form-username form-control" type="text" name="User" value="" id="Username"
                                   placeholder="Username">

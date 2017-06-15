@@ -39,7 +39,7 @@
         <span class="navbar-toggler-icon"></span>
     </button>
     <div class="container">
-        <a class="navbar-brand" href="/home"> <img width="75" height="75" src="/logopucmm.png"> Blog PUCMM Programacion
+        <a class="navbar-brand" href="/home/"> <img width="75" height="75" src="/logopucmm.png"> Blog PUCMM Programacion
             Web 2017</a>
     </div>
 </nav>
