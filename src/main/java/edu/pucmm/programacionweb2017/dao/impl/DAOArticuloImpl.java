@@ -145,4 +145,27 @@ public class DAOArticuloImpl extends DAOImpl<Articulo, Long> implements DAOArtic
             session.close();
         }
     }
+
+    @Override
+    public List<Articulo> obtenerArticulosPaginacion(int inicio, int fin) {
+        Session session = null;
+        Transaction transaction = null;
+        Query query = null;
+
+        try {
+            session = HibernateUtil.openSession();
+            transaction = session.beginTransaction();
+
+            query = session.createNativeQuery("SELECT * FROM ARTICULO a WHERE ROW_NUMBER() >= " + inicio + " AND ROW_NUMBER() <= " + fin, Articulo.class);
+
+            return query.list();
+        } catch (HibernateException e) {
+            transaction.rollback();
+            logger.debug("Error al ejecutar un select el objeto en la base de datos.", e);
+            return null;
+        } finally {
+            session.close();
+        }
+    }
+
 }

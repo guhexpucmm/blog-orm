@@ -48,4 +48,8 @@ public class ServiceArticulo{
     List<Articulo> obtenerArticulosDadaUnaEtiqueta(Etiqueta etiqueta) {
         return daoArticulo.obtenerArticulosDadaUnaEtiqueta(etiqueta);
     }
+
+    public List<Articulo> obtenerArticulosPaginacion(int inicio, int fin) {
+        return daoArticulo.obtenerArticulosPaginacion(inicio, fin);
+    }
 }

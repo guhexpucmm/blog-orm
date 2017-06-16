@@ -27,4 +27,6 @@ public interface DAOArticulo extends DAO<Articulo, Long> {
     List<Valoracion> obtenerValoracionesNegativas(Articulo articulo);
 
     List<Articulo> obtenerArticulosDadaUnaEtiqueta(Etiqueta etiqueta);
+
+    List<Articulo> obtenerArticulosPaginacion(int inicio, int fin);
 }

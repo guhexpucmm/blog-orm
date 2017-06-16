@@ -141,7 +141,8 @@ public class Main {
             if (serviceArticulo.encontrarTodos().size() < listaFin) {
                 attributes.put("articulos", articulosPorPagina.subList(listaInicio, serviceArticulo.encontrarTodos().size()));
             } else {
-                attributes.put("articulos", articulosPorPagina.subList(listaInicio, listaFin));
+                //attributes.put("articulos", articulosPorPagina.subList(listaInicio, listaFin));
+                attributes.put("articulos", serviceArticulo.obtenerArticulosPaginacion(listaInicio,listaFin));
             }
             attributes.put("usuarioLogueado", usuarioLogueado);
             attributes.put("estaLogueado", estaLogueado);
