@@ -1,7 +1,7 @@
 package edu.pucmm.programacionweb2017.entidad;
 
 import javax.persistence.*;
-import java.time.LocalDate;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -26,7 +26,7 @@ public class Articulo {
     @JoinColumn(name = "autorId")
     private Usuario autor;
     @Column(name = "fecha", nullable = false)
-    private LocalDate fecha;
+    private Date fecha;
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "articuloComentarios", joinColumns = {@JoinColumn(name = "articuloId")}, inverseJoinColumns = {@JoinColumn(name = "comentarioId")})
     private Set<Comentario> listaComentarios;
@@ -45,7 +45,7 @@ public class Articulo {
         listaValoraciones = new HashSet<>();
     }
 
-    public Articulo(String titulo, String cuerpo, Usuario autor, LocalDate fecha, Set<Comentario> listaComentarios, Set<Etiqueta> listaEtiquetas, Set<Valoracion> listaValoraciones) {
+    public Articulo(String titulo, String cuerpo, Usuario autor, Date fecha, Set<Comentario> listaComentarios, Set<Etiqueta> listaEtiquetas, Set<Valoracion> listaValoraciones) {
         this.titulo = titulo;
         this.cuerpo = cuerpo;
         this.autor = autor;
@@ -87,11 +87,11 @@ public class Articulo {
         this.autor = autor;
     }
 
-    public LocalDate getFecha() {
+    public Date getFecha() {
         return fecha;
     }
 
-    public void setFecha(LocalDate fecha) {
+    public void setFecha(Date fecha) {
         this.fecha = fecha;
     }
 

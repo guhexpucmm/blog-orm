@@ -18,7 +18,6 @@ import spark.Session;
 import spark.template.freemarker.FreeMarkerEngine;
 
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.util.*;
 
 import static edu.pucmm.programacionweb2017.database.BootstrapServices.startDb;
@@ -237,7 +236,7 @@ public class Main {
             Articulo nuevoArticulo = new Articulo();
             nuevoArticulo.setTitulo(request.queryParams("Titu"));
             nuevoArticulo.setCuerpo(request.queryParams("Cuer"));
-            nuevoArticulo.setFecha(LocalDate.now());
+            nuevoArticulo.setFecha(new Date());
             nuevoArticulo.setAutor(serviceUsuario.encontrarPorId(Long.parseLong(request.params().get(":idusuario"))));
             nuevoArticulo.getListaEtiquetas().addAll(etiquetas);
 
