@@ -75,6 +75,7 @@
                         by <a href="#">${articuloSeleccionado.getAutor().getNombre()}</a>
                     </label>
 
+                <#if estaLogueado == true>
                     <div class="btn-group" role="group" aria-label="...">
                         <button type="button" class="btn btn-success"
                                 onclick="${valoracion(articuloSeleccionado.getId(), "true")}">
@@ -87,6 +88,22 @@
                                 class="badge">${valoracionesNegativas}</span>
                         </button>
                     </div>
+                </#if>
+
+                <#if estaLogueado == false>
+                    <div class="btn-group" role="group" aria-label="...">
+                        <button type="button" class="btn btn-success"
+                                onclick="">
+                            <span class="glyphicon glyphicon-thumbs-up"></span>Me gusta!<span
+                                class="badge">${valoracionesPositivas}</span>
+                        </button>
+                        <button type="button" class="btn btn-danger"
+                                onclick="">
+                            <span class="glyphicon glyphicon-thumbs-down"></span>No me gusta!<span
+                                class="badge">${valoracionesNegativas}</span>
+                        </button>
+                    </div>
+                </#if>
 
                 </div>
             </div>
@@ -183,7 +200,7 @@
                 <label>${usuarioLogueado.getNombre()}</label>
             </div>
             <div class="input-group">
-                <form method="get" action="/home/cerrarSesion">
+                <form method="get" action="/cerraSesion">
                     <button class="btn btn-danger" type="submit">Cerrar sesion</button>
                 </form>
             </div>
