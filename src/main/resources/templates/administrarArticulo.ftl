@@ -58,7 +58,13 @@
                 </div>
 
                 <div class="card-footer text-muted">
-                    <label>Etiquetas: ${etiquetas}</label>
+                    <label>Etiquetas: </label>
+                    <p>
+                    <#list etiquetas as etiqueta>
+                        <label><a
+                                href="/articulosConEtiquetas/?etiqueta=${etiqueta.getId()}">${etiqueta.getEtiqueta()}</a></label>
+                    </#list>
+                    </p>
                 </div>
 
                 <div class="card-footer">

@@ -72,7 +72,7 @@ public class Main {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         get("/crearUsuario/", (request, response) -> {
-            if(invalidarSesion(request.session())){
+            if (invalidarSesion(request.session())) {
                 return new ModelAndView(null, "/sesionInvalida.ftl");
             }
 
@@ -126,24 +126,19 @@ public class Main {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         get("/home/:numeroPagina", (request, response) -> {
-            if(invalidarSesion(request.session()) && estaLogueado){
+            if (invalidarSesion(request.session()) && estaLogueado) {
 
                 return new ModelAndView(null, "/sesionInvalida.ftl");
             }
-            List<Articulo> articulosPorPagina = serviceArticulo.encontrarTodos();
             numeroPagina = Integer.parseInt(request.params("numeroPagina"));
 
 
             int listaFin = numeroPagina * 5;
             int listaInicio = listaFin - 5;
+
             Map<String, Object> attributes = new HashMap<>();
             attributes.put("numeroPagina", numeroPagina);
-            if (serviceArticulo.encontrarTodos().size() < listaFin) {
-                attributes.put("articulos", articulosPorPagina.subList(listaInicio, serviceArticulo.encontrarTodos().size()));
-            } else {
-                //attributes.put("articulos", articulosPorPagina.subList(listaInicio, listaFin));
-                attributes.put("articulos", serviceArticulo.obtenerArticulosPaginacion(listaInicio,listaFin));
-            }
+            attributes.put("articulos", serviceArticulo.obtenerArticulosPaginacion(listaInicio, listaFin));
             attributes.put("usuarioLogueado", usuarioLogueado);
             attributes.put("estaLogueado", estaLogueado);
 
@@ -166,7 +161,7 @@ public class Main {
                     if (existe) {
                         estaLogueado = estaLogueado(true);
                         usuarioLogueado = listadoUsuarioBD.get(i);
-                        idSesion=request.session().id();
+                        idSesion = request.session().id();
                     }
                     //FALTA CREAR CONDICION SINO EXISTE*************************************
                 }
@@ -189,7 +184,7 @@ public class Main {
             Map<String, Object> attributes = new HashMap<>();
             estaLogueado = false;
             usuarioLogueado = new Usuario();
-            idSesion="";
+            idSesion = "";
 
 
             response.redirect("/home");
@@ -213,7 +208,7 @@ public class Main {
 //!/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         get("/crearArticulo/:idUsuario", (request, response) -> {
-            if(invalidarSesion(request.session()) && estaLogueado){
+            if (invalidarSesion(request.session()) && estaLogueado) {
                 return new ModelAndView(null, "/sesionInvalida.ftl");
             }
             usuarioLogueado = serviceUsuario.encontrarPorId(Long.parseLong(request.params("idUsuario")));
@@ -231,7 +226,12 @@ public class Main {
             List<Etiqueta> etiquetas = new ArrayList<>();
 
             for (String string : Arrays.asList(request.queryMap().get("Eti").value().split(","))) {
-                etiquetas.add(new Etiqueta(string));
+                Etiqueta etiqueta = serviceEtiqueta.encontrarPorEtiqueta(string);
+                if (etiqueta != null) {
+                    etiquetas.add(etiqueta);
+                } else {
+                    etiquetas.add(new Etiqueta(string));
+                }
             }
 
             Articulo nuevoArticulo = new Articulo();
@@ -239,7 +239,7 @@ public class Main {
             nuevoArticulo.setCuerpo(request.queryParams("Cuer"));
             nuevoArticulo.setFecha(new Date());
             nuevoArticulo.setAutor(serviceUsuario.encontrarPorId(Long.parseLong(request.params().get(":idusuario"))));
-            nuevoArticulo.getListaEtiquetas().addAll(etiquetas);
+            nuevoArticulo.setListaEtiquetas(etiquetas);
 
             attributes.put("usuario", usuarioLogueado);
             serviceArticulo.insertar(nuevoArticulo);
@@ -252,7 +252,7 @@ public class Main {
 //!/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         get("/administrarArticulo/:idArticulo", (request, response) -> {
-            if(invalidarSesion(request.session()) && estaLogueado){
+            if (invalidarSesion(request.session()) && estaLogueado) {
                 return new ModelAndView(null, "/sesionInvalida.ftl");
             }
             Long articuloSeleccionId = Long.parseLong(request.params("idArticulo"));
@@ -260,21 +260,12 @@ public class Main {
 
             Map<String, Object> attributes = new HashMap<>();
 
-            StringBuilder etiquetas = new StringBuilder();
-
-            for (Etiqueta etiqueta : articuloSeleccionado.getListaEtiquetas()) {
-                etiquetas.append(etiqueta.getEtiqueta() + ",");
-            }
-
-            if (etiquetas.charAt(etiquetas.length() - 1) == ',')
-                etiquetas.deleteCharAt(etiquetas.length() - 1);
-
             attributes.put("estaLogueado", estaLogueado);
             attributes.put("usuarioLogueado", usuarioLogueado);
             attributes.put("articuloSeleccionado", articuloSeleccionado);
             attributes.put("valoracionesPositivas", serviceArticulo.obtenerValoracionesPositivas(articuloSeleccionado).size());
             attributes.put("valoracionesNegativas", serviceArticulo.obtenerValoracionesNegativas(articuloSeleccionado).size());
-            attributes.put("etiquetas", etiquetas.toString());
+            attributes.put("etiquetas", articuloSeleccionado.getListaEtiquetas());
             attributes.put("comentarios", articuloSeleccionado.getListaComentarios());
 
             attributes.put("valoracion", new ValoracionArticulo());
@@ -351,7 +342,7 @@ public class Main {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         get("/modificarArticulo/:idArticulo", (request, response) -> {
-            if(invalidarSesion(request.session()) && estaLogueado){
+            if (invalidarSesion(request.session()) && estaLogueado) {
                 return new ModelAndView(null, "/sesionInvalida.ftl");
             }
             Long idArticulo = Long.parseLong(request.params("idArticulo"));
@@ -433,8 +424,14 @@ public class Main {
 
         });
 
+        get("/articulosConEtiquetas/", (request, response) -> {
+            Etiqueta etiqueta = serviceEtiqueta.encontrarPorId(Long.parseLong(request.queryParams("etiqueta")));
+            Map<String, Object> attributes = new HashMap<>();
+            attributes.put("articulos", serviceArticulo.obtenerArticulosDadaUnaEtiqueta(etiqueta));
 
-    } //CIERRA LA CLASE.
+            return new ModelAndView(attributes, "/articulosConEtiquetas.ftl");
+        }, freeMarkerEngine);
+    }
 
     private static boolean estaLogueado(boolean estaLogueado) {
         return estaLogueado;
@@ -455,13 +452,11 @@ public class Main {
             serviceUsuario.insertar(usuario);
     }
 
-    private static boolean invalidarSesion(Session session){
-        if(idSesion.equals("")){
+    private static boolean invalidarSesion(Session session) {
+        if (idSesion.equals("")) {
             idSesion = session.id();
 
-        }
-
-        else if(!(session.id().equals(idSesion))){
+        } else if (!(session.id().equals(idSesion))) {
             session.invalidate();
             return true;
 
@@ -471,4 +466,3 @@ public class Main {
 
     }
 }
-

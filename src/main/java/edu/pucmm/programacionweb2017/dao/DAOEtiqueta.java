@@ -22,4 +22,6 @@ public interface DAOEtiqueta extends DAO<Etiqueta, Long> {
 
     @Override
     List<Etiqueta> encontrarTodos();
+
+    Etiqueta encontrarPorEtiqueta(String etiqueta);
 }

@@ -1,6 +1,5 @@
 package edu.pucmm.programacionweb2017.service;
 
-import edu.pucmm.programacionweb2017.dao.DAOEtiqueta;
 import edu.pucmm.programacionweb2017.dao.impl.DAOEtiquetaImpl;
 import edu.pucmm.programacionweb2017.entidad.Etiqueta;
 
@@ -34,5 +33,9 @@ public class ServiceEtiqueta {
 
     public List<Etiqueta> encontrarTodos() {
         return daoEtiqueta.encontrarTodos();
+    }
+
+    public Etiqueta encontrarPorEtiqueta(String etiqueta) {
+        return daoEtiqueta.encontrarPorEtiqueta(etiqueta);
     }
 }

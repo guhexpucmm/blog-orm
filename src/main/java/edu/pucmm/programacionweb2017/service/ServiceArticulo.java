@@ -29,6 +29,10 @@ public class ServiceArticulo{
         daoArticulo.borrar(articulo);
     }
 
+    public void merge(Articulo articulo) {
+        daoArticulo.merge(articulo);
+    }
+
     public Articulo encontrarPorId(Long aLong) {
         return daoArticulo.encontrarPorId(aLong);
     }
@@ -45,7 +49,7 @@ public class ServiceArticulo{
         return daoArticulo.obtenerValoracionesNegativas(articulo);
     }
 
-    List<Articulo> obtenerArticulosDadaUnaEtiqueta(Etiqueta etiqueta) {
+    public List<Articulo> obtenerArticulosDadaUnaEtiqueta(Etiqueta etiqueta) {
         return daoArticulo.obtenerArticulosDadaUnaEtiqueta(etiqueta);
     }
 

@@ -12,6 +12,8 @@ public interface DAO<T,K extends Long> {
 
     void borrar(T t);
 
+    void merge(T t);
+
     T encontrarPorId(K k);
 
     List<T> encontrarTodos();

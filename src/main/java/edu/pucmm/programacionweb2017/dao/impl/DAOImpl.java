@@ -33,6 +33,7 @@ public class DAOImpl<T,K extends Long> implements DAO<T, K> {
             transaction = session.beginTransaction();
 
             session.save(t);
+
             transaction.commit();
         } catch (HibernateException e) {
             transaction.rollback();
@@ -72,6 +73,26 @@ public class DAOImpl<T,K extends Long> implements DAO<T, K> {
             transaction = session.beginTransaction();
 
             session.delete(t);
+
+            transaction.commit();
+        } catch (HibernateException e) {
+            transaction.rollback();
+            logger.debug("Error al borrar el objeto en la base de datos.", e);
+        } finally {
+            session.close();
+        }
+    }
+
+    @Override
+    public void merge(T t) {
+        Session session = null;
+        Transaction transaction = null;
+
+        try {
+            session = HibernateUtil.openSession();
+            transaction = session.beginTransaction();
+
+            session.merge(t);
 
             transaction.commit();
         } catch (HibernateException e) {

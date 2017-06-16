@@ -5,6 +5,7 @@ import edu.pucmm.programacionweb2017.entidad.Articulo;
 import edu.pucmm.programacionweb2017.entidad.Etiqueta;
 import edu.pucmm.programacionweb2017.entidad.Valoracion;
 import edu.pucmm.programacionweb2017.hibernate.HibernateUtil;
+import edu.pucmm.programacionweb2017.service.ServiceArticulo;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -38,6 +39,11 @@ public class DAOArticuloImpl extends DAOImpl<Articulo, Long> implements DAOArtic
     @Override
     public void borrar(Articulo articulo) {
         super.borrar(articulo);
+    }
+
+    @Override
+    public void merge(Articulo articulo) {
+        super.merge(articulo);
     }
 
     @Override
@@ -124,19 +130,20 @@ public class DAOArticuloImpl extends DAOImpl<Articulo, Long> implements DAOArtic
         Session session = null;
         Transaction transaction = null;
         Query query = null;
+        List<Articulo> list = new ArrayList<>();
+        ServiceArticulo serviceArticulo = new ServiceArticulo();
 
         try {
             session = HibernateUtil.openSession();
             transaction = session.beginTransaction();
 
-            query = session.createQuery("from Articulo a, Etiqueta e where e.etiqueta = :etiqueta")
-                    .setParameter("etiqueta", etiqueta.getEtiqueta());
+            query = session.createNativeQuery("SELECT ARTICULOID FROM ARTICULOETIQUETAS WHERE ETIQUETAID = " + etiqueta.getId());
 
-            if (query.list() != null) {
-                return query.list();
-            } else {
-                return new ArrayList<>();
+            for (Object object : query.list()) {
+                list.add(serviceArticulo.encontrarPorId(Long.parseLong(object.toString())));
             }
+
+            return list;
         } catch (HibernateException e) {
             transaction.rollback();
             logger.debug("Error al ejecutar un select el objeto en la base de datos.", e);
@@ -156,7 +163,10 @@ public class DAOArticuloImpl extends DAOImpl<Articulo, Long> implements DAOArtic
             session = HibernateUtil.openSession();
             transaction = session.beginTransaction();
 
-            query = session.createNativeQuery("SELECT * FROM ARTICULO a WHERE ROW_NUMBER() >= " + inicio + " AND ROW_NUMBER() <= " + fin, Articulo.class);
+            query = session.createQuery("from Articulo a order by a.fecha desc ");
+
+            query.setFirstResult(inicio);
+            query.setMaxResults(fin);
 
             return query.list();
         } catch (HibernateException e) {
