@@ -14,6 +14,7 @@ import freemarker.template.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import spark.ModelAndView;
+import spark.Session;
 import spark.template.freemarker.FreeMarkerEngine;
 
 import java.sql.SQLException;
@@ -38,6 +39,7 @@ public class Main {
     static int numeroPagina = 1;
     static boolean estaLogueado = estaLogueado(false);
     static Usuario usuarioLogueado = new Usuario();
+    static String idSesion = "";
 
     public static void main(String[] args) throws SQLException {
         logger.info("Iniciando aplicacion");
@@ -71,6 +73,9 @@ public class Main {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         get("/crearUsuario/", (request, response) -> {
+            if(invalidarSesion(request.session())){
+                return new ModelAndView(null, "/sesionInvalida.ftl");
+            }
 
             Map<String, Object> attributes = new HashMap<>();
 
@@ -122,6 +127,10 @@ public class Main {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         get("/home/:numeroPagina", (request, response) -> {
+            if(invalidarSesion(request.session()) && estaLogueado){
+
+                return new ModelAndView(null, "/sesionInvalida.ftl");
+            }
             List<Articulo> articulosPorPagina = serviceArticulo.encontrarTodos();
             numeroPagina = Integer.parseInt(request.params("numeroPagina"));
 
@@ -157,6 +166,7 @@ public class Main {
                     if (existe) {
                         estaLogueado = estaLogueado(true);
                         usuarioLogueado = listadoUsuarioBD.get(i);
+                        idSesion=request.session().id();
                     }
                     //FALTA CREAR CONDICION SINO EXISTE*************************************
                 }
@@ -179,6 +189,7 @@ public class Main {
             Map<String, Object> attributes = new HashMap<>();
             estaLogueado = false;
             usuarioLogueado = new Usuario();
+            idSesion="";
 
 
             response.redirect("/home");
@@ -202,6 +213,9 @@ public class Main {
 //!/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         get("/crearArticulo/:idUsuario", (request, response) -> {
+            if(invalidarSesion(request.session()) && estaLogueado){
+                return new ModelAndView(null, "/sesionInvalida.ftl");
+            }
             usuarioLogueado = serviceUsuario.encontrarPorId(Long.parseLong(request.params("idUsuario")));
 
             Map<String, Object> attributes = new HashMap<>();
@@ -238,6 +252,9 @@ public class Main {
 //!/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         get("/administrarArticulo/:idArticulo", (request, response) -> {
+            if(invalidarSesion(request.session()) && estaLogueado){
+                return new ModelAndView(null, "/sesionInvalida.ftl");
+            }
             Long articuloSeleccionId = Long.parseLong(request.params("idArticulo"));
             Articulo articuloSeleccionado = serviceArticulo.encontrarPorId(articuloSeleccionId);
 
@@ -273,6 +290,7 @@ public class Main {
             Comentario nuevoComentario = new Comentario();
 
             nuevoComentario.setComentario(request.queryParams("Coment"));
+            //articulo.getListaComentarios().add(nuevoComentario);
             nuevoComentario.setArticulo(articulo);
             nuevoComentario.setAutor(usuarioLogueado);
             serviceComentario.insertar(nuevoComentario);
@@ -330,6 +348,9 @@ public class Main {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         get("/modificarArticulo/:idArticulo", (request, response) -> {
+            if(invalidarSesion(request.session()) && estaLogueado){
+                return new ModelAndView(null, "/sesionInvalida.ftl");
+            }
             Long idArticulo = Long.parseLong(request.params("idArticulo"));
             Articulo articulo = serviceArticulo.encontrarPorId(idArticulo);
 
@@ -429,6 +450,22 @@ public class Main {
         logger.info("Verificando si el usuario ya se introdujo. El usuario por defecto");
         if (serviceUsuario.encontrarPorId(new Long(1)) == null)
             serviceUsuario.insertar(usuario);
+    }
+
+    private static boolean invalidarSesion(Session session){
+        if(idSesion.equals("")){
+            idSesion = session.id();
+
+        }
+
+        else if(!(session.id().equals(idSesion))){
+            session.invalidate();
+            return true;
+
+
+        }
+        return false;
+
     }
 }
 
