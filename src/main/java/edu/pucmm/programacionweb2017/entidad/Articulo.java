@@ -1,7 +1,9 @@
 package edu.pucmm.programacionweb2017.entidad;
 
 import javax.persistence.*;
-import java.util.*;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 
 /**
@@ -29,8 +31,8 @@ public class Articulo {
     @JoinTable(name = "articuloComentarios", joinColumns = {@JoinColumn(name = "articuloId")}, inverseJoinColumns = {@JoinColumn(name = "comentarioId")})
     private Set<Comentario> listaComentarios;
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(name = "articuloEtiquetas", joinColumns = {@JoinColumn(name = "articuloId", unique = true)}, inverseJoinColumns = {@JoinColumn(name = "etiquetaId")}, uniqueConstraints = @UniqueConstraint(columnNames = {"articuloId", "etiquetaId"}))
-    private List<Etiqueta> listaEtiquetas;
+    @JoinTable(name = "articuloEtiquetas", joinColumns = {@JoinColumn(name = "articuloId", unique = true)}, inverseJoinColumns = {@JoinColumn(name = "etiquetaId")})
+    private Set<Etiqueta> listaEtiquetas;
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "articuloValoraciones", joinColumns = {@JoinColumn(name = "articuloId")}, inverseJoinColumns = {@JoinColumn(name = "valoracionId")})
     private Set<Valoracion> listaValoraciones;
@@ -39,11 +41,11 @@ public class Articulo {
 
     public Articulo() {
         listaComentarios = new HashSet<>();
-        listaEtiquetas = new ArrayList<>();
+        listaEtiquetas = new HashSet<>();
         listaValoraciones = new HashSet<>();
     }
 
-    public Articulo(String titulo, String cuerpo, Usuario autor, Date fecha, Set<Comentario> listaComentarios, List<Etiqueta> listaEtiquetas, Set<Valoracion> listaValoraciones) {
+    public Articulo(String titulo, String cuerpo, Usuario autor, Date fecha, Set<Comentario> listaComentarios, Set<Etiqueta> listaEtiquetas, Set<Valoracion> listaValoraciones) {
         this.titulo = titulo;
         this.cuerpo = cuerpo;
         this.autor = autor;
@@ -101,11 +103,11 @@ public class Articulo {
         this.listaComentarios = listaComentarios;
     }
 
-    public List<Etiqueta> getListaEtiquetas() {
+    public Set<Etiqueta> getListaEtiquetas() {
         return listaEtiquetas;
     }
 
-    public void setListaEtiquetas(List<Etiqueta> listaEtiquetas) {
+    public void setListaEtiquetas(Set<Etiqueta> listaEtiquetas) {
         this.listaEtiquetas = listaEtiquetas;
     }
 

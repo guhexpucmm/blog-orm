@@ -1,5 +1,6 @@
 package edu.pucmm.programacionweb2017.dao;
 
+import edu.pucmm.programacionweb2017.entidad.Usuario;
 import edu.pucmm.programacionweb2017.entidad.Valoracion;
 
 import java.util.List;
@@ -22,4 +23,6 @@ public interface DAOValoracion extends DAO<Valoracion, Long> {
 
     @Override
     List<Valoracion> encontrarTodos();
+
+    Usuario encontrarUsuarioValoracion(Usuario usuario);
 }

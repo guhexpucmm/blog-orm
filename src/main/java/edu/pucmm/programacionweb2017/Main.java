@@ -1,15 +1,8 @@
 package edu.pucmm.programacionweb2017;
 
-import edu.pucmm.programacionweb2017.entidad.Articulo;
-import edu.pucmm.programacionweb2017.entidad.Comentario;
-import edu.pucmm.programacionweb2017.entidad.Etiqueta;
-import edu.pucmm.programacionweb2017.entidad.Usuario;
-import edu.pucmm.programacionweb2017.funciones.ValoracionArticulo;
+import edu.pucmm.programacionweb2017.entidad.*;
 import edu.pucmm.programacionweb2017.hibernate.HibernateUtil;
-import edu.pucmm.programacionweb2017.service.ServiceArticulo;
-import edu.pucmm.programacionweb2017.service.ServiceComentario;
-import edu.pucmm.programacionweb2017.service.ServiceEtiqueta;
-import edu.pucmm.programacionweb2017.service.ServiceUsuario;
+import edu.pucmm.programacionweb2017.service.*;
 import freemarker.template.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +27,7 @@ public class Main {
     private static final ServiceComentario serviceComentario = new ServiceComentario();
     private static final ServiceEtiqueta serviceEtiqueta = new ServiceEtiqueta();
     private static final ServiceUsuario serviceUsuario = new ServiceUsuario();
+    private static final ServiceValoracion serviceValoracion = new ServiceValoracion();
 
     static int numeroPagina = 1;
     static boolean estaLogueado = estaLogueado(false);
@@ -223,7 +217,7 @@ public class Main {
         post("/crearArticulo/:idUsuario", (request, response) -> {
 
             Map<String, Object> attributes = new HashMap<>();
-            List<Etiqueta> etiquetas = new ArrayList<>();
+            Set<Etiqueta> etiquetas = new HashSet<>();
 
             for (String string : Arrays.asList(request.queryMap().get("Eti").value().split(","))) {
                 Etiqueta etiqueta = serviceEtiqueta.encontrarPorEtiqueta(string);
@@ -267,8 +261,6 @@ public class Main {
             attributes.put("valoracionesNegativas", serviceArticulo.obtenerValoracionesNegativas(articuloSeleccionado).size());
             attributes.put("etiquetas", articuloSeleccionado.getListaEtiquetas());
             attributes.put("comentarios", articuloSeleccionado.getListaComentarios());
-
-            attributes.put("valoracion", new ValoracionArticulo());
 
             return new ModelAndView(attributes, "/administrarArticulo.ftl");
         }, freeMarkerEngine);
@@ -430,6 +422,23 @@ public class Main {
             attributes.put("articulos", serviceArticulo.obtenerArticulosDadaUnaEtiqueta(etiqueta));
 
             return new ModelAndView(attributes, "/articulosConEtiquetas.ftl");
+        }, freeMarkerEngine);
+
+        get("/valoracion/", (request, response) -> {
+            Usuario usuario = serviceUsuario.encontrarPorId(Long.parseLong(request.queryParams("usuario")));
+            Articulo articulo = serviceArticulo.encontrarPorId(Long.parseLong(request.queryParams("articulo")));
+            boolean like = Boolean.valueOf(String.valueOf(request.queryParams("valoracion")));
+
+            if (serviceValoracion.encontrarUsuarioValoracion(usuario) == null) {
+                Valoracion v = new Valoracion(like, usuario, articulo);
+
+                serviceValoracion.insertar(v);
+
+                response.redirect("/administrarArticulo/" + articulo.getId());
+            } else {
+                response.redirect("/administrarArticulo/" + articulo.getId());
+            }
+            return new ModelAndView(null, "/valoracion.ftl");
         }, freeMarkerEngine);
     }
 

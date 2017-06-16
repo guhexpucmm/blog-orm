@@ -84,12 +84,12 @@
                 <#if estaLogueado == true>
                     <div class="btn-group" role="group" aria-label="...">
                         <button type="button" class="btn btn-success"
-                                onclick="${valoracion(articuloSeleccionado.getId(), "true")}">
+                                onclick="location.href = '/valoracion/?valoracion=true&usuario=${articuloSeleccionado.getAutor().getId()}&articulo=${articuloSeleccionado.getId()}'">
                             <span class="glyphicon glyphicon-thumbs-up"></span>Me gusta!<span
                                 class="badge">${valoracionesPositivas}</span>
                         </button>
                         <button type="button" class="btn btn-danger"
-                                onclick="${valoracion(articuloSeleccionado.getId(), "false")}">
+                                onclick="location.href = '/valoracion/?valoracion=false&usuario=${articuloSeleccionado.getAutor().getId()}&articulo=${articuloSeleccionado.getId()}'">
                             <span class="glyphicon glyphicon-thumbs-down"></span>No me gusta!<span
                                 class="badge">${valoracionesNegativas}</span>
                         </button>

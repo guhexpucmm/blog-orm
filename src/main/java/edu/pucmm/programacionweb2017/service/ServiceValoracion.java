@@ -1,6 +1,7 @@
 package edu.pucmm.programacionweb2017.service;
 
 import edu.pucmm.programacionweb2017.dao.impl.DAOValoracionImpl;
+import edu.pucmm.programacionweb2017.entidad.Usuario;
 import edu.pucmm.programacionweb2017.entidad.Valoracion;
 
 import java.util.List;
@@ -33,5 +34,9 @@ public class ServiceValoracion {
 
     public List<Valoracion> encontrarTodos() {
         return daoValoracion.encontrarTodos();
+    }
+
+    public Usuario encontrarUsuarioValoracion(Usuario usuario) {
+        return daoValoracion.encontrarUsuarioValoracion(usuario);
     }
 }
