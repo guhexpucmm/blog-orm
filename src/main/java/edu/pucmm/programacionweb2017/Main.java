@@ -289,9 +289,12 @@ public class Main {
             Comentario nuevoComentario = new Comentario();
 
             nuevoComentario.setComentario(request.queryParams("Coment"));
-            //articulo.getListaComentarios().add(nuevoComentario);
             nuevoComentario.setArticulo(articulo);
             nuevoComentario.setAutor(usuarioLogueado);
+
+            articulo.getListaComentarios().add(nuevoComentario);
+
+            serviceArticulo.actualizar(articulo);
             serviceComentario.insertar(nuevoComentario);
 
             response.redirect("/home/1"); //ARREGLAR QUE AL CREAR MANDA A INDEX **********************************************

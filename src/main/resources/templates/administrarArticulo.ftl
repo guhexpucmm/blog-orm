@@ -119,7 +119,7 @@
                             </div>
                         <!--LOGICA DE ELIMINAR-->
                         <div class="card-footer text-muted">Comentario hecho por: <a
-                                href="#">${comentario.getAutorId()}</a>
+                                href="#">${comentario.getAutor().getNombre()}</a>
                                 <!--
                                 <button type="button" class="btn btn-default">
                                     <a href="/eliminarComentario/${articuloSeleccionado.getAutor()}/${comentario.getId()}">Eliminar</a>
