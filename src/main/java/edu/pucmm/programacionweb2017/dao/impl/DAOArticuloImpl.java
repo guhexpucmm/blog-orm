@@ -47,7 +47,24 @@ public class DAOArticuloImpl extends DAOImpl<Articulo, Long> implements DAOArtic
 
     @Override
     public List<Articulo> encontrarTodos() {
-        return super.encontrarTodos();
+        Session session = null;
+        Transaction transaction = null;
+        Query query = null;
+
+        try {
+            session = HibernateUtil.openSession();
+            transaction = session.beginTransaction();
+
+            query = session.createQuery("from Articulo a order by a.fecha desc ");
+
+            return query.list();
+        } catch (HibernateException e) {
+            transaction.rollback();
+            logger.debug("Error al ejecutar un select el objeto en la base de datos.", e);
+            return null;
+        } finally {
+            session.close();
+        }
     }
 
     @Override
