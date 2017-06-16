@@ -76,13 +76,15 @@
                     </label>
 
                     <div class="btn-group" role="group" aria-label="...">
-                        <button type="button" class="btn btn-success" onclick="meGusta()">
+                        <button type="button" class="btn btn-success"
+                                onclick="${valoracion(articuloSeleccionado.getId(), "true")}">
                             <span class="glyphicon glyphicon-thumbs-up"></span>Me gusta!<span
                                 class="badge">${valoracionesPositivas}</span>
                         </button>
-                        <button type="button" class="btn btn-danger">
+                        <button type="button" class="btn btn-danger"
+                                onclick="${valoracion(articuloSeleccionado.getId(), "false")}">
                             <span class="glyphicon glyphicon-thumbs-down"></span>No me gusta!<span
-                                class="badge">0</span>
+                                class="badge">${valoracionesNegativas}</span>
                         </button>
                     </div>
 

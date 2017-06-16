@@ -1,6 +1,7 @@
 package edu.pucmm.programacionweb2017.dao;
 
 import edu.pucmm.programacionweb2017.entidad.Articulo;
+import edu.pucmm.programacionweb2017.entidad.Etiqueta;
 import edu.pucmm.programacionweb2017.entidad.Valoracion;
 
 import java.util.List;
@@ -24,4 +25,6 @@ public interface DAOArticulo extends DAO<Articulo, Long> {
     List<Valoracion> obtenerValoracionesPositivas(Articulo articulo);
 
     List<Valoracion> obtenerValoracionesNegativas(Articulo articulo);
+
+    List<Articulo> obtenerArticulosDadaUnaEtiqueta(Etiqueta etiqueta);
 }
