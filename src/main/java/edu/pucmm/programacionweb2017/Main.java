@@ -446,7 +446,6 @@ public class Main {
         return estaLogueado;
     }
 
-
     private static void crearUsuarioAdmin() {
         Usuario usuario = new Usuario();
         usuario.setId(new Long(1));
