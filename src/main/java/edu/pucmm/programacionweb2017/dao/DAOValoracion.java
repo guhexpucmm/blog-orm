@@ -25,4 +25,6 @@ public interface DAOValoracion extends DAO<Valoracion, Long> {
     List<Valoracion> encontrarTodos();
 
     Usuario encontrarUsuarioValoracion(Usuario usuario);
+
+    Valoracion encontrarValoracion(Usuario usuario, Long id);
 }

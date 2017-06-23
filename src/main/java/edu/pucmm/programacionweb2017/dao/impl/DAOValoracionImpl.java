@@ -71,4 +71,26 @@ public class DAOValoracionImpl extends DAOImpl<Valoracion, Long> implements DAOV
             session.close();
         }
     }
+
+    @Override
+    public Valoracion encontrarValoracion(Usuario usuario, Long id) {
+        Session session = null;
+        Transaction transaction = null;
+        Query query = null;
+
+        try {
+            session = HibernateUtil.openSession();
+            transaction = session.beginTransaction();
+
+            query = session.createQuery("from Valoracion v where v.usuario.id = :uid and articulo.id = :id").setParameter("uid", usuario.getId()).setParameter("id", id);
+
+            return (Valoracion) query.uniqueResult();
+        } catch (HibernateException e) {
+            transaction.rollback();
+            logger.debug("Error al ejecutar un select el objeto en la base de datos.", e);
+            return null;
+        } finally {
+            session.close();
+        }
+    }
 }

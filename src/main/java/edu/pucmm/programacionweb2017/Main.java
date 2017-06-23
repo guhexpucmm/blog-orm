@@ -425,12 +425,14 @@ public class Main {
         }, freeMarkerEngine);
 
         get("/valoracion/", (request, response) -> {
-            Usuario usuario = serviceUsuario.encontrarPorId(Long.parseLong(request.queryParams("usuario")));
+            Usuario usuario = serviceUsuario.encontrarPorId(Long.valueOf(request.queryParams("usuario")));
             Articulo articulo = serviceArticulo.encontrarPorId(Long.parseLong(request.queryParams("articulo")));
             boolean like = Boolean.valueOf(String.valueOf(request.queryParams("valoracion")));
 
-            if (serviceValoracion.encontrarUsuarioValoracion(usuario) == null) {
-                Valoracion v = new Valoracion(like, usuario, articulo);
+            Valoracion v = serviceValoracion.encontrarValoracion(usuario, articulo.getId());
+
+            if (v == null) {
+                v = new Valoracion(like, usuario, articulo);
 
                 serviceValoracion.insertar(v);
 
